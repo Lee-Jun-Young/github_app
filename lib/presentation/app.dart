@@ -29,7 +29,10 @@ class MyAppState extends State<MyAppPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _navIndex.elementAt(_selectedIndex),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _navIndex,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: Colors.blue,
         unselectedItemColor: Colors.blueGrey,

@@ -5,7 +5,7 @@ import 'bookmark_view.dart';
 import 'bookmark_viewmodel.dart';
 
 class BookmarkPage extends StatelessWidget {
-  BookmarkPage({super.key});
+  const BookmarkPage({super.key});
 
   @override
   Widget build(BuildContext context) {

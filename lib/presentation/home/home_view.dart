@@ -5,12 +5,20 @@ import '../../data/dto/user_info.dart';
 import '../../data/dto/user_repository.dart';
 import 'home_viewmodel.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
+  HomeViewState createState() => HomeViewState();
+}
+
+class HomeViewState extends State<HomeView> {
+  late HomeViewModel viewModel;
+
+  @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<HomeViewModel>(context);
+    viewModel = Provider.of<HomeViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -24,11 +32,13 @@ class HomeView extends StatelessWidget {
           )
         ],
       ),
-      body: _buildBody(viewModel.state),
+      body: _buildBody(),
     );
   }
 
-  Widget _buildBody(HomeState state) {
+  Widget _buildBody() {
+    final state = viewModel.state;
+
     if (!state.isLoaded) {
       return const Center(
         child: CircularProgressIndicator(),
