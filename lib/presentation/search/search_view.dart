@@ -6,7 +6,7 @@ import '../detail/detail_page.dart';
 import 'search_viewmodel.dart';
 
 class SearchView extends StatefulWidget {
-  const SearchView({super.key});
+  const SearchView({super.key});g
 
   @override
   SearchState createState() => SearchState();
