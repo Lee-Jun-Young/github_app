@@ -6,7 +6,7 @@ import '../detail/detail_page.dart';
 import 'search_viewmodel.dart';
 
 class SearchView extends StatefulWidget {
-  const SearchView({super.key});g
+  const SearchView({super.key});
 
   @override
   SearchState createState() => SearchState();
@@ -105,7 +105,7 @@ class SearchState extends State<SearchView> {
         ),
       );
     } else if (state.items.isEmpty && state.isLoaded) {
-      return _buildEmptyView();
+      return _searchEmptyView();
     } else {
       return Expanded(
         child: ListView.builder(
@@ -138,7 +138,7 @@ class SearchState extends State<SearchView> {
     );
   }
 
-  Widget _buildEmptyView() {
+  Widget _searchEmptyView() {
     return Expanded(
       child: Center(
         child: Text(

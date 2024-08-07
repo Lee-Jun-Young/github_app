@@ -13,16 +13,41 @@ class DetailViewModel with ChangeNotifier {
     _loadDetailData(login);
   }
 
-  bool isLoaded = false;
+  DetailState _state = DetailState.initial();
 
-  UserData get userInfo => _userInfo;
-  late UserData _userInfo = UserData(UserInfo.empty(), []);
+  DetailState get state => _state;
 
   Future<void> _loadDetailData(String login) async {
     final userInfo = await _remoteRepository.getDetailUserByLogin(login);
-    final repoInfo = await _remoteRepository.getRepos(login);
-    _userInfo = UserData(userInfo, repoInfo);
-    isLoaded = true;
+    final repoData = await _remoteRepository.getRepos(userInfo.login);
+    _state = _state.copyWith(
+      isLoaded: true,
+      items: UserData(userInfo, repoData),
+    );
     notifyListeners();
+  }
+}
+
+class DetailState {
+  final bool isLoaded;
+  final UserData items;
+
+  DetailState({
+    required this.isLoaded,
+    required this.items,
+  });
+
+  factory DetailState.initial() {
+    return DetailState(isLoaded: false, items: UserData(UserInfo.empty(), []));
+  }
+
+  DetailState copyWith({
+    bool? isLoaded,
+    UserData? items,
+  }) {
+    return DetailState(
+      isLoaded: isLoaded ?? this.isLoaded,
+      items: items ?? this.items,
+    );
   }
 }

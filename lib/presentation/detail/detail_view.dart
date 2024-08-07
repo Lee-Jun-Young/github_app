@@ -19,12 +19,11 @@ class DetailView extends StatelessWidget {
   }
 
   Widget _detailScreen(BuildContext context) {
-    final item = viewModel.userInfo;
-    final isLoaded = viewModel.isLoaded;
-    final isBookmarked = bookmarkViewModel.item
-        .any((element) => element.login == item.userInfo.login);
+    final state = viewModel.state;
+    final isBookmarked =
+        bookmarkViewModel.isBookmarked(state.items.userInfo.login);
 
-    if (!isLoaded) {
+    if (!state.isLoaded) {
       return const Center(child: CircularProgressIndicator());
     } else {
       return PopScope(
@@ -38,12 +37,12 @@ class DetailView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _detailUserInfoView(context, item.userInfo),
-                  _repositoryList(item.repoInfo)
+                  _detailUserInfoView(context, state.items.userInfo),
+                  _repositoryList(state.items.repoInfo)
                 ],
               ),
             ),
-            _bookmarkButton(isBookmarked, context, item.userInfo),
+            _bookmarkButton(isBookmarked, context, state.items.userInfo),
           ],
         ),
       );

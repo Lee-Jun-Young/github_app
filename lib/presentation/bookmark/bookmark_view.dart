@@ -9,13 +9,13 @@ class BookmarkView extends StatefulWidget {
   const BookmarkView({super.key});
 
   @override
-  _BookmarkViewState createState() => _BookmarkViewState();
+  BookmarkViewState createState() => BookmarkViewState();
 }
 
-class _BookmarkViewState extends State<BookmarkView> {
+class BookmarkViewState extends State<BookmarkView> {
   late BookmarkViewModel viewModel;
 
-  Future<void> cardClickEvent(BuildContext context, UserInfo item) async {
+  Future<void> _onClickCard(BuildContext context, UserInfo item) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -30,71 +30,80 @@ class _BookmarkViewState extends State<BookmarkView> {
     }
   }
 
+  void _deleteBookmark(String login) {
+    setState(() {
+      viewModel.deleteBookmark(login);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     viewModel = Provider.of<BookmarkViewModel>(context);
 
     return Scaffold(
-      body: _bookmarkList(onDelete: (String login) {
-        setState(() {
-          viewModel.deleteBookmark(login);
-        });
-      }),
+      body: _bookmarkList(),
     );
   }
 
-  Widget _bookmarkList({required Function(String) onDelete}) {
-    final items = viewModel.item;
-    final isLoaded = viewModel.isLoaded;
+  Widget _bookmarkList() {
+    final state = viewModel.state;
 
-    if (isLoaded == false) {
+    if (state.isLoaded == false) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      if (items.isEmpty) {
-        return const Center(
-          child: Text('No bookmarked items'),
-        );
+      if (state.items.isEmpty) {
+        return _bookmarkEmptyView();
       } else {
         return Expanded(
           child: ListView.builder(
-            itemCount: items.length,
+            itemCount: state.items.length,
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.elliptical(20, 20),
-                  ),
-                ),
-                child: ListTile(
-                    leading: Image.network(
-                      items[index].avatarUrl,
-                      width: 56,
-                      height: 56,
-                    ),
-                    title: Text(items[index].name.toString()),
-                    subtitle: Text(items[index].login),
-                    onTap: () {
-                      cardClickEvent(context, items[index]);
-                    },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.favorite, color: Colors.red),
-                          onPressed: () {
-                            onDelete(items[index].login);
-                          },
-                        ),
-                      ],
-                    )),
-              );
+              return _bookmarkResultCard(state.items[index]);
             },
           ),
         );
       }
     }
+  }
+
+  Widget _bookmarkResultCard(UserInfo item) {
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.elliptical(20, 20),
+        ),
+      ),
+      child: ListTile(
+          leading: Image.network(
+            item.avatarUrl,
+            width: 56,
+            height: 56,
+          ),
+          title: Text(item.name.toString()),
+          subtitle: Text(item.login),
+          onTap: () {
+            _onClickCard(context, item);
+          },
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(Icons.favorite, color: Colors.red),
+                onPressed: () => _deleteBookmark(item.login),
+              ),
+            ],
+          )),
+    );
+  }
+
+  Widget _bookmarkEmptyView() {
+    return Expanded(
+      child: Center(
+        child: Text('No bookmarked items'),
+      ),
+    );
   }
 }

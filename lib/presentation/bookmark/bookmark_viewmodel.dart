@@ -13,14 +13,16 @@ class BookmarkViewModel with ChangeNotifier {
     getBookmarkedItems();
   }
 
-  List<UserInfo> get item => _item;
-  late List<UserInfo> _item = [];
+  BookmarkState _state = BookmarkState.initial();
 
-  bool isLoaded = false;
+  BookmarkState get state => _state;
 
   Future<void> getBookmarkedItems() async {
-    _item = await _localRepository.getBookmarkList();
-    isLoaded = true;
+    final items = await _localRepository.getBookmarkList();
+    _state = _state.copyWith(
+      isLoaded: true,
+      items: items,
+    );
     notifyListeners();
   }
 
@@ -32,5 +34,36 @@ class BookmarkViewModel with ChangeNotifier {
   Future<void> insertBookmark(UserInfo item) async {
     await _localRepository.insertBookmark(item);
     getBookmarkedItems();
+  }
+
+  bool isBookmarked(String login) {
+    return _state.items.any((element) => element.login == login);
+  }
+}
+
+class BookmarkState {
+  final bool isLoaded;
+  final List<UserInfo> items;
+
+  BookmarkState({
+    required this.isLoaded,
+    required this.items,
+  });
+
+  factory BookmarkState.initial() {
+    return BookmarkState(
+      isLoaded: false,
+      items: [],
+    );
+  }
+
+  BookmarkState copyWith({
+    bool? isLoaded,
+    List<UserInfo>? items,
+  }) {
+    return BookmarkState(
+      isLoaded: isLoaded ?? this.isLoaded,
+      items: items ?? this.items,
+    );
   }
 }
