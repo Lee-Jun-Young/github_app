@@ -99,7 +99,11 @@ class SearchState extends State<SearchView> {
     final state = viewModel.state;
 
     if (!state.isLoaded && !state.isFirst) {
-      return const Center(child: CircularProgressIndicator());
+      return const Expanded(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     } else if (state.items.isEmpty && state.isLoaded) {
       return _buildEmptyView();
     } else {

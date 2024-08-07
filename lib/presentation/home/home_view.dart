@@ -33,24 +33,19 @@ class HomeView extends StatelessWidget {
     final userData = viewModel.userInfo;
     final isLoaded = viewModel.isLoaded;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (!isLoaded)
-            const Center(
-              child: CircularProgressIndicator(),
-            )
-          else
-            Column(
+    return isLoaded
+        ? SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _homeCardView(userData.userInfo),
                 _repositoryList(userData.repoInfo),
               ],
-            )
-        ],
-      ),
-    );
+            ),
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 
   Widget _homeCardView(UserInfo data) {
