@@ -27,7 +27,7 @@ UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
       avatarUrl: json['avatar_url'] as String,
       followers: (json['followers'] as num?)?.toInt(),
       following: (json['following'] as num?)?.toInt(),
-      isBookmarked: false,
+      isBookmarked: json['isBookmarked'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{

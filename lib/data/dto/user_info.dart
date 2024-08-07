@@ -26,7 +26,8 @@ class UserInfo {
   String avatarUrl = "";
   int? followers;
   int? following;
-  bool isBookmarked = false;
+  @JsonKey(defaultValue: false)
+  bool isBookmarked;
 
   UserInfo(
       {required this.login,
@@ -48,8 +49,6 @@ class UserInfo {
 
   factory UserInfo.fromJson(Map<String, dynamic> json) =>
       _$UserInfoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserInfoToJson(this);
 
   Map<String, dynamic> get toMap => {
         'login': login,
