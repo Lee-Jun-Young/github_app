@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:github_app/presentation/home/home_viewmodel.dart';
 import 'package:provider/provider.dart';
 
+import '../../custom_theme.dart';
 import '../../data/dto/user_info.dart';
 import '../../data/dto/user_repository.dart';
 import 'home_viewmodel.dart';
@@ -27,12 +30,77 @@ class HomeViewState extends State<HomeView> {
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {
-              // 설정 다이어그램 연결
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return _settingDialog();
+                },
+              );
             },
           )
         ],
       ),
       body: _buildBody(),
+    );
+  }
+
+  Widget _settingDialog() {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('테마',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ValueListenableBuilder<ThemeMode>(
+              valueListenable: CustomThemeMode.themeMode,
+              builder: (context, themeMode, child) {
+                return Column(
+                  children: [
+                    RadioListTile<ThemeMode>(
+                      title: const Text('Light'),
+                      value: ThemeMode.light,
+                      groupValue: themeMode,
+                      onChanged: (value) {
+                        if (value != null) {
+                          CustomThemeMode.change(value);
+                        }
+                      },
+                    ),
+                    RadioListTile<ThemeMode>(
+                      title: const Text('Dark'),
+                      value: ThemeMode.dark,
+                      groupValue: themeMode,
+                      onChanged: (value) {
+                        if (value != null) {
+                          CustomThemeMode.change(value);
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 

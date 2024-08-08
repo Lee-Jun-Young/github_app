@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:github_app/custom_theme.dart';
+import 'package:github_app/custom_theme_data.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/dto/user_info.dart';
@@ -70,7 +72,7 @@ class SearchState extends State<SearchView> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
           _buildSearchBar(),
           _buildSearchResult(),
         ],
@@ -141,10 +143,7 @@ class SearchState extends State<SearchView> {
   Widget _searchEmptyView() {
     return Expanded(
       child: Center(
-        child: Text(
-          'No results found',
-          style: TextStyle(fontSize: 20, color: Colors.grey),
-        ),
+        child: Text('No results found'),
       ),
     );
   }
